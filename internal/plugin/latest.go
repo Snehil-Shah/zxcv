@@ -8,8 +8,14 @@ import (
 	"strings"
 )
 
-// Latest returns the latest stable version matching prefix (empty string = any).
-func (p *Plugin) Latest(ctx context.Context, prefix string) (string, error) {
+// IsLatestString reports whether v is the literal "latest" or "latest:<prefix>".
+func IsLatestString(v string) bool {
+	return v == "latest" || strings.HasPrefix(v, "latest:")
+}
+
+// Latest returns the latest stable version matching spec, where spec is "latest" or "latest:<prefix>".
+func (p *Plugin) Latest(ctx context.Context, spec string) (string, error) {
+	prefix := strings.TrimPrefix(strings.TrimPrefix(spec, "latest"), ":")
 	stdout, _, err := p.RunCallback(ctx, "latest-stable", []string{prefix}, nil)
 	if err == nil {
 		v := strings.TrimSpace(string(stdout))
@@ -23,11 +29,11 @@ func (p *Plugin) Latest(ctx context.Context, prefix string) (string, error) {
 	}
 
 	// Fallback: derive from bin/list-all output.
-	stdout, _, err = p.RunCallback(ctx, "list-all", nil, nil)
+	versions, err := p.ListAll(ctx)
 	if err != nil {
 		return "", err
 	}
-	return pickLatest(strings.Fields(string(stdout)), prefix)
+	return pickLatest(versions, prefix)
 }
 
 // pickLatest returns the last non-prerelease version matching prefix.

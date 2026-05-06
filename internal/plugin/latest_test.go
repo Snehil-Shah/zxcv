@@ -5,8 +5,30 @@ import (
 	"context"
 	"testing"
 
+	"github.com/Snehil-Shah/zxcv/internal/plugin"
 	"github.com/Snehil-Shah/zxcv/internal/testutil"
 )
+
+func TestIsLatestString(t *testing.T) {
+	tests := []struct {
+		in   string
+		want bool
+	}{
+		{"latest", true},
+		{"latest:1.26", true},
+		{"latest:", true},
+		{"1.26", false},
+		{"", false},
+		{"latestish", false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.in, func(t *testing.T) {
+			if got := plugin.IsLatestString(tt.in); got != tt.want {
+				t.Errorf("IsLatestString(%q) = %v, want %v", tt.in, got, tt.want)
+			}
+		})
+	}
+}
 
 func TestLatest_ViaLatestStable(t *testing.T) {
 	testutil.HermeticDataDir(t)

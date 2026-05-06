@@ -9,7 +9,6 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
-	"strings"
 	"sync"
 
 	"github.com/Snehil-Shah/zxcv/internal/binary"
@@ -17,6 +16,7 @@ import (
 	"github.com/Snehil-Shah/zxcv/internal/plugin"
 	"github.com/Snehil-Shah/zxcv/internal/registry"
 	"github.com/Snehil-Shah/zxcv/internal/tooldefinitions"
+	"github.com/Snehil-Shah/zxcv/internal/toolversions"
 )
 
 // Install runs the install pipeline for each target in parallel.
@@ -50,19 +50,14 @@ func (i *Installer) Install(ctx context.Context, targets []Target) []Result {
 func installTarget(ctx context.Context, target Target) Result {
 	res := Result{Target: target}
 
-	def, err := sourceFor(target)
+	p, err := EnsurePlugin(ctx, target.Name, target.Definition)
 	if err != nil {
-		res.Err = err
-		return res
-	}
-	p := plugin.New(def.Name)
-	if err := syncPlugin(ctx, p, def); err != nil {
 		res.Err = fmt.Errorf("plugin: %w", err)
 		return res
 	}
 
-	if isLatest(target.Version) {
-		concrete, err := p.Latest(ctx, latestPrefix(target.Version))
+	if plugin.IsLatestString(target.Version) {
+		concrete, err := p.Latest(ctx, target.Version)
 		if err != nil {
 			res.Err = fmt.Errorf("latest: %w", err)
 			return res
@@ -135,6 +130,20 @@ func installTarget(ctx context.Context, target Target) Result {
 
 // TODO: Maybe sourcing and plugin management should be part of plugin package? idk. currently the plugin package is just a dumb wrapper around its disk existence.
 
+// EnsurePlugin makes sure name's plugin is present on disk, syncing/installing if necessary.
+func EnsurePlugin(ctx context.Context, name string, def *tooldefinitions.Definition) (*plugin.Plugin, error) {
+	target := Target{Tool: toolversions.Tool{Name: name}, Definition: def}
+	resolved, err := sourceFor(target)
+	if err != nil {
+		return nil, err
+	}
+	p := plugin.New(name)
+	if err := syncPlugin(ctx, p, resolved); err != nil {
+		return nil, err
+	}
+	return p, nil
+}
+
 // sourceFor returns the plugin source for target, falling back to the registry.
 func sourceFor(target Target) (*tooldefinitions.Definition, error) {
 	if target.Definition != nil {
@@ -197,18 +206,6 @@ func addPlugin(ctx context.Context, p *plugin.Plugin, def *tooldefinitions.Defin
 		return p.Add(ctx, def.URL)
 	}
 	return p.Link(ctx, def.Path)
-}
-
-// TODO: perhaps we can move the latest tag handling into the plugin package itself? is it smelly here? if u have free time, think of the perfect abstraction for this.
-
-// isLatest reports whether v is the literal "latest" or "latest:<prefix>".
-func isLatest(v string) bool {
-	return v == "latest" || strings.HasPrefix(v, "latest:")
-}
-
-// latestPrefix extracts the prefix from "latest:<prefix>" (returns "" for plain "latest").
-func latestPrefix(v string) string {
-	return strings.TrimPrefix(strings.TrimPrefix(v, "latest"), ":")
 }
 
 // callbackEnv builds the env map plugin scripts expect.
