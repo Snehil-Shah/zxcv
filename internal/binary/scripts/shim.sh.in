@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# zxcv-plugin: {{.Plugin}}
+exec zxcv exec "{{.Plugin}}" "{{.BinName}}" "$@"

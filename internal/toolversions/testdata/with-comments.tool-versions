@@ -1,0 +1,7 @@
+# Project tool versions
+
+nodejs 20.11.0        # LTS for now
+python 3.11.5
+
+# Ruby pinned due to bundler compat
+ruby 3.2.0

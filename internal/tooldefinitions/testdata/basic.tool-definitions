@@ -1,0 +1,4 @@
+internal-cli https://github.com/ourorg/asdf-internal-cli.git
+legacy-plugin git@github.com:legacy-org/asdf-legacy.git
+my-plugin /Users/me/work/asdf-my-plugin
+our-cli ./tooling/asdf-our-cli

@@ -1,0 +1,6 @@
+# Project plugin sources
+
+internal-cli https://github.com/ourorg/asdf-internal-cli.git   # main plugin
+
+# Local development overrides
+my-plugin /Users/me/work/asdf-my-plugin
