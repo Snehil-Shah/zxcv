@@ -11,7 +11,6 @@ import (
 	"github.com/Snehil-Shah/zxcv/internal/cli/list"
 	"github.com/Snehil-Shah/zxcv/internal/cli/search"
 	"github.com/Snehil-Shah/zxcv/internal/cli/uninstall"
-	"github.com/Snehil-Shah/zxcv/internal/cli/version"
 	"github.com/Snehil-Shah/zxcv/internal/cli/which"
 )
 
@@ -34,7 +33,6 @@ func New(ver string) *cli.Command {
 			which.Command(),
 			list.Command(),
 			uninstall.Command(),
-			version.Command(),
 		},
 	}
 }
