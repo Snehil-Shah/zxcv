@@ -16,11 +16,13 @@ import (
 )
 
 // New returns the top-level cli.Command.
-func New() *cli.Command {
+func New(ver string) *cli.Command {
 	return &cli.Command{
-		Name:        "zxcv",
-		Usage:       "A minimalist, fast .tool-versions manager",
-		Description: "zxcv is a dead simple tool-version manager — a cleaner, friendlier alternative to asdf that plugs into its ecosystem with a highly minimalistic command surface and enjoyably better performance.",
+		Name:                  "zxcv",
+		Version:               ver,
+		Usage:                 "A minimalist, fast .tool-versions manager",
+		Description:           "zxcv is a dead simple tool-version manager — a cleaner, friendlier alternative to asdf that plugs into its ecosystem with a highly minimalistic command surface and enjoyably better performance.",
+		EnableShellCompletion: true,
 		ConfigureShellCompletionCommand: func(c *cli.Command) {
 			c.Hidden = false
 		},

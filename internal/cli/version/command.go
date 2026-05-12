@@ -18,7 +18,7 @@ func Command() *cli.Command {
 }
 
 // run is the action function for the `version` command.
-func run(_ context.Context, _ *cli.Command) error {
-	// TODO: figure out versioning and releases
+func run(_ context.Context, c *cli.Command) error {
+	cli.ShowVersion(c.Root())
 	return nil
 }
