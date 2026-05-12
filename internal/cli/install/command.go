@@ -18,8 +18,8 @@ func Command() *cli.Command {
 		Description: "Downloads & installs all resolved tools for the current directory, if no arguments are provided. If a specific tool and its version are provided, it installs only that and adds them to the local .tool-versions manifest. This behavior can be controlled to save it to the global manifest or not save at all using the --global and --no-save flags, respectively. You can specify the version as 'latest' (or with a prefix 'latest:<prefix>') to simply install and pin the latest version of the tool.",
 		ArgsUsage:   "[<tool> {<version>|latest|latest:<prefix>}]",
 		Flags: []cli.Flag{
-			&cli.BoolFlag{Name: "global", Usage: "Install globally. Affects the global ~/.tool-versions file"},
-			&cli.BoolFlag{Name: "no-save", Usage: "Do not modify any .tool-versions file"},
+			&cli.BoolFlag{Name: "global", Usage: "install globally; affects the global ~/.tool-versions file"},
+			&cli.BoolFlag{Name: "no-save", Usage: "do not modify any .tool-versions file"},
 		},
 		Action: run,
 	}
