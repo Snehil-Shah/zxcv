@@ -1,0 +1,74 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  goreleaser:
+    name: GoReleaser
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Release
+        uses: goreleaser/goreleaser-action@v7
+        with:
+          distribution: goreleaser
+          version: latest
+          args: release --clean
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-docs:
+    name: Deploy docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: docs/requirements.txt
+
+      - name: Install Python dependencies
+        run: pip install -r docs/requirements.txt
+
+      - name: Configure git for Mike
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Deploy version
+        run: |
+          mike deploy --push --update-aliases \
+            --message "chore(docs): deploy ${GITHUB_REF_NAME}" \
+            "${GITHUB_REF_NAME}" stable
+
+      - name: Copy install scripts to gh-pages root
+        run: |
+          git fetch origin gh-pages:gh-pages
+          git worktree add /tmp/ghpages gh-pages
+          cp scripts/install.sh scripts/uninstall.sh /tmp/ghpages/
+          cd /tmp/ghpages
+          git add install.sh uninstall.sh
+          git diff --cached --quiet || git commit -m "chore(release): sync install scripts"
+          git push origin gh-pages
