@@ -50,6 +50,11 @@ func (i *Installer) Install(ctx context.Context, targets []Target) []Result {
 func installTarget(ctx context.Context, target Target) Result {
 	res := Result{Target: target}
 
+	// "system" is an exec-time sentinel; nothing to install.
+	if target.Version == toolversions.SystemVersion {
+		return res
+	}
+
 	p, err := EnsurePlugin(ctx, target.Name, target.Definition)
 	if err != nil {
 		res.Err = fmt.Errorf("plugin: %w", err)

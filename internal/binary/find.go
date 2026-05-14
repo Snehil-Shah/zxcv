@@ -12,10 +12,8 @@ import (
 	"github.com/Snehil-Shah/zxcv/internal/config"
 	"github.com/Snehil-Shah/zxcv/internal/plugin"
 	"github.com/Snehil-Shah/zxcv/internal/resolver"
+	"github.com/Snehil-Shah/zxcv/internal/toolversions"
 )
-
-// systemVersion is the special sentinel that exec's the binary on PATH outside our shims.
-const systemVersion = "system"
 
 // Resolved describes the target binary. Plugin is nil for system-version resolutions.
 type Resolved struct {
@@ -55,7 +53,7 @@ func PluginForShim(name string) (*plugin.Plugin, error) {
 
 // resolveInstalled returns the path to the binary for an installed plugin@version, or the system fallback.
 func resolveInstalled(ctx context.Context, pluginName, binary, version string) (*Resolved, error) {
-	if version == systemVersion {
+	if version == toolversions.SystemVersion {
 		path, err := findSystem(binary, config.ShimsDir())
 		if err != nil {
 			return nil, err

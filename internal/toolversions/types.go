@@ -1,6 +1,9 @@
 // Package toolversions abstracts `.tool-versions` manifest handling.
 package toolversions
 
+// SystemVersion is the special sentinel that exec's the binary on PATH outside our shims.
+const SystemVersion = "system"
+
 // Tool represents a `.tool-versions` entry.
 type Tool struct {
 	Name    string

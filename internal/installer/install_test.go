@@ -139,3 +139,22 @@ func TestInstall_ExpandsLatest(t *testing.T) {
 		t.Errorf("expected install at concrete version, got %v", err)
 	}
 }
+
+func TestInstall_SkipsSystemVersion(t *testing.T) {
+	testutil.HermeticDataDir(t)
+	// Plugin's install script would exit non-zero if tried to be installed.
+	src := t.TempDir()
+	testutil.MakeFakePluginAt(t, src, map[string]string{"install": "#!/bin/sh\nexit 1\n"})
+	target := installer.Target{
+		Tool:       toolversions.Tool{Name: "mytool", Version: "system"},
+		Definition: &tooldefinitions.Definition{Name: "mytool", Path: src},
+	}
+
+	res := installer.New().Install(context.Background(), []installer.Target{target})[0]
+	if res.Err != nil {
+		t.Fatalf("expected no-op for system version, got error: %v", res.Err)
+	}
+	if _, err := os.Stat(filepath.Join(config.InstallsDir(), "mytool", "system")); !errors.Is(err, fs.ErrNotExist) {
+		t.Errorf("system version should not create an install dir, got err=%v", err)
+	}
+}
