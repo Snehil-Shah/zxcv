@@ -1,6 +1,6 @@
 # zxcv
 
-A minimalist, fast `.tool-versions` manager. It is a cleaner, friendlier alternative to [asdf](https://asdf-vm.com/) that plugs into its plugin ecosystem with a highly minimalistic command surface and enjoyably better performance.
+A minimalist, fast .tool-versions manager. It is a cleaner, friendlier alternative to [asdf](https://asdf-vm.com/) that plugs into its plugin ecosystem with a highly minimalistic command surface and enjoyably better performance.
 
 ## Why zxcv?
 
