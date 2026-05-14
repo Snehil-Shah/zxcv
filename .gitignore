@@ -1,2 +1,5 @@
 # Build output
 /bin/
+
+# mkdocs's env
+.venv/

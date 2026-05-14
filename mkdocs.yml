@@ -1,0 +1,40 @@
+site_name: zxcv
+site_url: https://snehil-shah.github.io/zxcv/
+repo_url: https://github.com/Snehil-Shah/zxcv
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  features:
+    - content.code.copy
+    - content.action.edit
+    - navigation.expand
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: black
+      accent: black
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: white
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+plugins:
+  - search
+  - awesome-nav
+
+extra:
+  version:
+    provider: mike
+
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true

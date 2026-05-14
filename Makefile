@@ -1,6 +1,6 @@
 BINARY := zxcv
 
-.PHONY: build test lint vet fmt clean run
+.PHONY: build test lint vet fmt clean run docs
 
 build:
 	@mkdir -p bin
@@ -23,3 +23,6 @@ lint: vet
 
 clean:
 	rm -rf bin/
+
+docs:
+	go run ./cmd/docs
