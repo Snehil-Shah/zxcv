@@ -18,7 +18,7 @@ Then in any project with a `.tool-versions`:
 zxcv install
 ```
 
-That's it. Find the full documentation and usage instructions [here](https://snehil-shah.github.io/zxcv/).
+That's it. Find the full documentation and usage instructions [here](https://snehil-shah.github.io/zxcv/), or use the `zxcv --help` command.
 
 ## Why?
 
