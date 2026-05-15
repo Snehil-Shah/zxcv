@@ -7,7 +7,8 @@ A minimalist, fast .tool-versions manager. It is a cleaner, friendlier alternati
 - **Dead simple**: Handful of self-explanatory commands.
 - **No plugins**: No manual plugin management, we do it all for you.
 - **Faster installs**: Quick setups so you can have your tools ready ASAP.
-- **Cleanest DX**: See it yourself!
+- **.tool-definitions**: A new declarative way to define custom tools.
+- **Cleanest DX**: See it for yourself!
 
 ## Quick start
 
@@ -15,7 +16,7 @@ A minimalist, fast .tool-versions manager. It is a cleaner, friendlier alternati
 curl -fsSL https://snehil-shah.github.io/zxcv/install.sh | sh
 ```
 
-Then in any project with a `.tool-versions`:
+Then in any project with a `.tool-versions` file:
 
 ```sh
 zxcv install
