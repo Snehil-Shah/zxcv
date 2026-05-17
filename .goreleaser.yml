@@ -38,3 +38,11 @@ snapshot:
 release:
   draft: false
   prerelease: auto
+  header: |
+    ## Installation
+
+    ```sh
+    curl -fsSL https://snehil-shah.github.io/zxcv/install.sh | sh -s {{ .Tag }}
+    ```
+
+    Find the docs [here](https://snehil-shah.github.io/zxcv/{{ .Tag }}/).
