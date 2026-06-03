@@ -24,6 +24,10 @@ func (p *Plugin) RunCallback(ctx context.Context, callback string, args []string
 		}
 		return nil, nil, fmt.Errorf("stat %s: %w", script, statErr)
 	}
+	env, err = withAsdfShimOnPath(env)
+	if err != nil {
+		return nil, nil, err
+	}
 	cmd := fmt.Sprintf("%q", script)
 	for _, a := range args {
 		cmd += fmt.Sprintf(" %q", a)

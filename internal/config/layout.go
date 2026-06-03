@@ -13,6 +13,7 @@ const (
 	pluginsSubdir   = "plugins"
 	shimsSubdir     = "bin"
 	registrySubdir  = "plugin-index"
+	libexecSubdir   = "libexec"
 )
 
 // GlobalDir returns the directory where the global `.tool-versions` file lives ($HOME).
@@ -47,3 +48,6 @@ func ShimsDir() string { return filepath.Join(DataDir(), shimsSubdir) }
 
 // RegistryDir is the local clone of the asdf plugin index.
 func RegistryDir() string { return filepath.Join(DataDir(), registrySubdir) }
+
+// LibexecDir holds internal helper executables not meant to be on the user's PATH.
+func LibexecDir() string { return filepath.Join(DataDir(), libexecSubdir) }
