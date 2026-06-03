@@ -126,7 +126,7 @@ func (p *Progress) spin() {
 func (p *Progress) renderInPlace(idx int) {
 	upN := len(p.labels) - idx
 	// Write ANSI codes for various term operations like moving the cursor, clearing shit and whatnot.
-	fmt.Fprintf(os.Stderr, "\033[s\033[%dA\r\033[2K%s\033[u", upN, p.formatLine(idx))
+	fmt.Fprintf(os.Stderr, "\0337\033[%dA\r\033[2K%s\0338", upN, p.formatLine(idx))
 }
 
 // formatLine returns the rendered "<icon> <label>" string for idx based on its state.
