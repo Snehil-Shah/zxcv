@@ -18,7 +18,7 @@ func Command() *cli.Command {
 	return &cli.Command{
 		Name:      "which",
 		Usage:     "Output the resolved path of a tool's binary",
-		ArgsUsage: "<name>",
+		ArgsUsage: "<binary>",
 		Action:    run,
 	}
 }
@@ -27,7 +27,7 @@ func Command() *cli.Command {
 func run(ctx context.Context, c *cli.Command) error {
 	name := c.Args().First()
 	if name == "" {
-		return errors.New("usage: zxcv which <name>")
+		return errors.New("usage: zxcv which <binary>")
 	}
 	cwd, err := os.Getwd()
 	if err != nil {
