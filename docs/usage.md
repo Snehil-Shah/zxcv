@@ -18,7 +18,9 @@ zxcv [GLOBAL OPTIONS] [command [COMMAND OPTIONS]] [ARGUMENTS...]
 
 ### current
 
-Show all resolved tools and their versions for the current directory
+Show resolved tools and their versions for the current directory
+
+**--version**: output version(s) only
 
 ### search
 
