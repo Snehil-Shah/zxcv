@@ -8,18 +8,25 @@ import (
 
 	"github.com/Snehil-Shah/zxcv/internal/installer"
 	"github.com/Snehil-Shah/zxcv/internal/plugin"
+	"github.com/Snehil-Shah/zxcv/internal/registry"
 	"github.com/Snehil-Shah/zxcv/internal/ui"
 )
 
 // runVersionSearch lists versions of name matching version query.
 func runVersionSearch(ctx context.Context, name, query string) error {
-	prog := ui.NewProgress([]string{ui.Dim("syncing plugin")})
-	p, err := installer.EnsurePlugin(ctx, name, nil)
-	if err != nil {
+	prog := ui.NewProgress([]string{ui.Dim("updating registry"), ui.Dim("syncing plugin")})
+	if err := registry.Refresh(ctx); err != nil {
 		prog.Failed(0)
-		return fmt.Errorf("plugin: %w", err)
+		return fmt.Errorf("registry: %w", err)
 	}
 	prog.Done(0)
+
+	p, err := installer.EnsurePlugin(ctx, name, nil)
+	if err != nil {
+		prog.Failed(1)
+		return fmt.Errorf("plugin: %w", err)
+	}
+	prog.Done(1)
 	prog.Clear()
 
 	if plugin.IsLatestString(query) {
