@@ -15,6 +15,15 @@ const (
 	registrySubdir  = "plugin-index"
 )
 
+// GlobalDir returns the directory where the global `.tool-versions` file lives ($HOME).
+func GlobalDir() string {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "."
+	}
+	return home
+}
+
 // DataDir contains our root data directory ($HOME/.zxcv).
 func DataDir() string {
 	home, err := os.UserHomeDir()
@@ -36,5 +45,5 @@ func PluginsDir() string { return filepath.Join(DataDir(), pluginsSubdir) }
 // ShimsDir is where all entrypoint binaries live.
 func ShimsDir() string { return filepath.Join(DataDir(), shimsSubdir) }
 
-// RegistryDir is the local clone xof the asdf plugin index.
+// RegistryDir is the local clone of the asdf plugin index.
 func RegistryDir() string { return filepath.Join(DataDir(), registrySubdir) }

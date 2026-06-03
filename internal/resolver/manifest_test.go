@@ -14,10 +14,7 @@ func TestGlobalManifest(t *testing.T) {
 	home := testutil.HermeticDataDir(t)
 	homeDir := filepath.Dir(home)
 
-	got, err := resolver.GlobalManifest()
-	if err != nil {
-		t.Fatal(err)
-	}
+	got := resolver.GlobalManifest()
 	want := filepath.Join(homeDir, ".tool-versions")
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)

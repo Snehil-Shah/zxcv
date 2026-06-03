@@ -2,18 +2,15 @@
 package resolver
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
+
+	"github.com/Snehil-Shah/zxcv/internal/config"
 )
 
 // GlobalManifest returns the path to the global `.tool-versions` under $HOME.
-func GlobalManifest() (string, error) {
-	home, err := os.UserHomeDir()
-	if err != nil {
-		return "", fmt.Errorf("home dir: %w", err)
-	}
-	return filepath.Join(home, manifestName), nil
+func GlobalManifest() string {
+	return filepath.Join(config.GlobalDir(), manifestName)
 }
 
 // ApplicableManifest returns the path to the nearest `.tool-versions` walking up from dir.

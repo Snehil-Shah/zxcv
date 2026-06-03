@@ -8,6 +8,7 @@ import (
 
 	"github.com/urfave/cli/v3"
 
+	"github.com/Snehil-Shah/zxcv/internal/config"
 	"github.com/Snehil-Shah/zxcv/internal/installer"
 	"github.com/Snehil-Shah/zxcv/internal/resolver"
 	"github.com/Snehil-Shah/zxcv/internal/toolversions"
@@ -15,6 +16,13 @@ import (
 
 // runSpecific installs name@version, and optionally writes to `.tool-versions` (global or local).
 func runSpecific(ctx context.Context, inst *installer.Installer, c *cli.Command, name, version string) error {
+	// Under --global, run install from global dir so any plugin-side resolution happens within global ctx.
+	if c.Bool("global") {
+		if err := os.Chdir(config.GlobalDir()); err != nil {
+			return fmt.Errorf("chdir home: %w", err)
+		}
+	}
+
 	targets := []installer.Target{{Tool: toolversions.Tool{Name: name, Version: version}}}
 	results, err := runInstall(ctx, inst, targets)
 	if err != nil {
@@ -28,10 +36,7 @@ func runSpecific(ctx context.Context, inst *installer.Installer, c *cli.Command,
 	}
 
 	concrete := results[0].Target.Version
-	path, err := writeTarget(c.Bool("global"))
-	if err != nil {
-		return err
-	}
+	path := writeTarget(c.Bool("global"))
 	if err := toolversions.WriteEntry(path, name, concrete); err != nil {
 		return fmt.Errorf("write %s: %w", path, err)
 	}
@@ -39,13 +44,10 @@ func runSpecific(ctx context.Context, inst *installer.Installer, c *cli.Command,
 }
 
 // writeTarget returns the `.tool-versions` path to update, honoring `--global`.
-func writeTarget(global bool) (string, error) {
+func writeTarget(global bool) string {
 	if global {
 		return resolver.GlobalManifest()
 	}
-	cwd, err := os.Getwd()
-	if err != nil {
-		return "", fmt.Errorf("getwd: %w", err)
-	}
-	return resolver.ApplicableManifest(cwd), nil
+	cwd, _ := os.Getwd()
+	return resolver.ApplicableManifest(cwd)
 }

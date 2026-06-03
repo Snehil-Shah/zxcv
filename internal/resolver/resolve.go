@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"io/fs"
-	"os"
 	"path/filepath"
 
+	"github.com/Snehil-Shah/zxcv/internal/config"
 	"github.com/Snehil-Shah/zxcv/internal/tooldefinitions"
 	"github.com/Snehil-Shah/zxcv/internal/toolversions"
 )
@@ -63,10 +63,8 @@ func Resolve(startDir string) ([]Resolution, error) {
 		dir = parent
 	}
 
-	if home, err := os.UserHomeDir(); err == nil {
-		if err := ingest(home); err != nil {
-			return nil, err
-		}
+	if err := ingest(config.GlobalDir()); err != nil {
+		return nil, err
 	}
 
 	return resolutions, nil
@@ -92,14 +90,12 @@ func ResolveVersion(startDir, name string) (string, error) {
 		}
 		dir = parent
 	}
-	if home, err := os.UserHomeDir(); err == nil {
-		tools, err := loadVersions(home)
-		if err != nil {
-			return "", err
-		}
-		if t, ok := tools.Lookup(name); ok {
-			return t.Version, nil
-		}
+	tools, err := loadVersions(config.GlobalDir())
+	if err != nil {
+		return "", err
+	}
+	if t, ok := tools.Lookup(name); ok {
+		return t.Version, nil
 	}
 	return "", fmt.Errorf("no version of %s set", name)
 }
